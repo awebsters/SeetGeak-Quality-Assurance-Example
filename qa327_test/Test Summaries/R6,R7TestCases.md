@@ -1,4 +1,4 @@
-**R6 /buy **
+**R6 /buy**
 
 **Test Case R6.1.1**
 
@@ -27,8 +27,8 @@ Actions:
 -   Click on 'input\[name="submit"\]
 
 -   Validate that current page contains\`\#error\_message\` that shows
-    > 'The name of the ticket has to be alphanumeric-only, and space
-    > allowed only if it is not the first or the last character'
+     'The name of the ticket has to be alphanumeric-only, and space
+     allowed only if it is not the first or the last character'
 
 **Test Case R6.2.1**
 
@@ -59,7 +59,7 @@ Actions:
 -   Click on 'input\[name="submit"\]
 
 -   Validate that current page contains\`\#error\_message\` that shows
-    > 'Ticket name can be no longer than 60 characters\'
+     'Ticket name can be no longer than 60 characters\'
 
 **Test Case R6.3.1**
 
@@ -90,8 +90,8 @@ Actions:
 -   Click on 'input\[name="submit"\]
 
 -   Validate that current page contains\`\#error\_message\` that shows
-    > 'The quantity of the tickets has to be more than 0, and less than
-    > or equal to 100
+     'The quantity of the tickets has to be more than 0, and less than
+     or equal to 100
 
 **Test Case R6.3.2**
 
@@ -122,8 +122,8 @@ Actions:
 -   Click on 'input\[name="submit"\]
 
 -   Validate that current page contains\`\#error\_message\` that shows
-    > 'The quantity of the tickets has to be more than 0, and less than
-    > or equal to 100
+    'The quantity of the tickets has to be more than 0, and less than
+    or equal to 100
 
 **Test Case R6.4.1**
 
@@ -158,7 +158,7 @@ Actions:
 -   Click on 'input\[name="submit"\]
 
 -   Validate that current page contains\`\#error\_message\` that shows
-    > the quantity is not more than the quantity requested to buy
+    the quantity is not more than the quantity requested to buy
 
 **Test Case R6.5.1**
 
@@ -189,8 +189,8 @@ Actions:
 -   Click on 'input\[name="submit"\]
 
 -   Validate that current page contains\`\#error\_message\` that the
-    > user does not have more balance than the ticket price \*
-    > quantity + service fee (35%) + tax (5%)
+    user does not have more balance than the ticket price \*
+    quantity + service fee (35%) + tax (5%)
 
 **Test Case R6.6.1**
 
