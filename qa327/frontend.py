@@ -24,7 +24,6 @@ def register_post():
     password2 = request.form.get('password2')
     error_message = None
 
-
     if password != password2:
         error_message = "The passwords do not match"
 
