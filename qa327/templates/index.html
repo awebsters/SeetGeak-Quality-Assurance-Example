@@ -21,5 +21,19 @@
 {% endfor %}
 </div>
 
+<form method="post">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input class="form-control" name="name" id="name" required>
+      <label for="quantity">Quantity</label>
+      <input class="form-control" name="quantity" id="quantity" required>
+      <label for="price">price</label>
+      <input class="form-control" name="price" id="price" required>
+      <label for="date">expiration date</label>
+      <input class="form-control" type="date" name="date" id="date" required>
+      <input class="btn btn-lg btn-primary" type="submit" id="btn-submit" value="Submit or Update Ticket">
+    </div>
+  </form>
+
 <a href='/logout'>logout</a>
 {% endblock %}

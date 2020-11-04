@@ -126,3 +126,19 @@ def profile(user):
     # front-end portals
     tickets = bn.get_all_tickets()
     return render_template('index.html', user=user, tickets=tickets)
+
+
+@app.route('/', methods=['POST'])
+def profile_post():
+    name = request.form.get('name')
+    quantity = request.form.get('quantity')
+    price = request.form.get('price')
+    date = request.form.get('date')
+    ticket = bn.get_ticket(name)
+    if ticket:
+        # we are updating
+        pass
+    else:
+        # we are creating
+        bn.create_ticket(name, quantity, price, date, session['logged_in'])
+    return redirect('/')
