@@ -6,7 +6,7 @@ import qa327.backend as bn
 This file defines the front-end part of the service.
 It elaborates how the services should handle different
 http requests from the client (browser) through templating.
-The html templates are stored in the 'templates' folder. 
+The html templates are stored in the 'templates' folder.
 """
 
 
@@ -59,9 +59,9 @@ def login_post():
     if user:
         session['logged_in'] = user.email
         """
-        Session is an object that contains sharing information 
-        between browser and the end server. Typically it is encrypted 
-        and stored in the browser cookies. They will be past 
+        Session is an object that contains sharing information
+        between browser and the end server. Typically it is encrypted
+        and stored in the browser cookies. They will be past
         along between every request the browser made to this services.
 
         Here we store the user object into the session, so we can tell
@@ -86,7 +86,7 @@ def authenticate(inner_function):
     """
     :param inner_function: any python function that accepts a user object
 
-    Wrap any python function and check the current session to see if 
+    Wrap any python function and check the current session to see if
     the user has logged in. If login, it will call the inner_function
     with the logged in user object.
 
@@ -128,17 +128,22 @@ def profile(user):
     return render_template('index.html', user=user, tickets=tickets)
 
 
-@app.route('/', methods=['POST'])
-def profile_post():
+@app.route('/sell', methods=['POST'])
+def sell():
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
     date = request.form.get('date')
     ticket = bn.get_ticket(name)
-    if ticket:
-        # we are updating
-        pass
-    else:
-        # we are creating
-        bn.create_ticket(name, quantity, price, date, session['logged_in'])
-    return redirect('/')
+    bn.create_ticket(name, quantity, price, date, session['logged_in'])
+    return redirect('/', code=303)
+
+
+@app.route('/buy', methods=['POST'])
+def buy():
+    return redirect('/', code=303)
+
+
+@app.route('/update', methods=['POST'])
+def profile_post():
+    return redirect('/', code=303)

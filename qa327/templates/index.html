@@ -21,7 +21,10 @@
 {% endfor %}
 </div>
 
-<form method="post">
+<br>
+<h3>Sell a Ticket</h3>
+<h4 id='message'>{{sell_message}}</h4>
+<form action="/sell" method="post">
     <div class="form-group">
       <label for="name">Name</label>
       <input class="form-control" name="name" id="name" required>
@@ -31,9 +34,40 @@
       <input class="form-control" name="price" id="price" required>
       <label for="date">expiration date</label>
       <input class="form-control" type="date" name="date" id="date" required>
-      <input class="btn btn-lg btn-primary" type="submit" id="btn-submit" value="Submit or Update Ticket">
+      <input class="btn btn-lg btn-primary" type="submit" id="btn-submit" value="Sell Ticket">
     </div>
-  </form>
+</form>
+
+<br>
+<h3>Buy a Ticket</h3>
+<h4 id='message'>{{buy_message}}</h4>
+<form action="/buy" method="post">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input class="form-control" name="name" id="name" required>
+    <label for="quantity">Quantity</label>
+    <input class="form-control" name="quantity" id="quantity" required>
+    <input class="btn btn-lg btn-primary" type="submit" id="btn-submit" value="Buy Ticket">
+  </div>
+</form>
+
+<br>
+<h3>Update a Ticket</h3>
+<h4 id='message'>{{update_message}}</h4>
+<form action="/update" method="post">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input class="form-control" name="name" id="name" required>
+    <label for="quantity">Quantity</label>
+    <input class="form-control" name="quantity" id="quantity" required>
+    <label for="price">price</label>
+    <input class="form-control" name="price" id="price" required>
+    <label for="date">expiration date</label>
+    <input class="form-control" type="date" name="date" id="date" required>
+    <input class="btn btn-lg btn-primary" type="submit" id="btn-submit" value="Update Ticket">
+  </div>
+</form>
+
 
 <a href='/logout'>logout</a>
 {% endblock %}
