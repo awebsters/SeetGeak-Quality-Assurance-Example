@@ -1,4 +1,4 @@
-from flask import render_template, request, session, redirect
+from flask import render_template, request, session, redirect, url_for
 from qa327 import app
 import qa327.backend as bn
 import re
@@ -38,21 +38,26 @@ def register_post():
 
     if password != password2:
         error_message = "The passwords do not match"
-        return redirect('/login', error_message)
+        session['error'] = error_message
+        return redirect('/login')
     elif not patternEmail.fullmatch(email):
         error_message =  '{} format is incorrect.'.format("Email")
-        return redirect('/login', error_message)
+        session['error'] = error_message
+        return redirect('/login')
 
     elif not patternPass.fullmatch(password):
         error_message =  '{} format is incorrect.'.format("Password")
-        return redirect('/login', error_message)
+        session['error'] = error_message
+        return redirect('/login')
 
     elif len(password) < 1:
         error_message = "Password not strong enough"
 
     elif not patternName.fullmatch(name) or len(name) < 2 or len(name) > 20:
-        error_message =  '{} format is incorrect.'.format("Email")
-    else:
+        error_message =  '{} format is incorrect.'.format("Name")
+        session['error'] = error_message
+        return redirect('/login')
+
         user = bn.get_user(email)
         if user:
             error_message = "This email has been ALREADY use"
@@ -69,7 +74,13 @@ def register_post():
 
 @app.route('/login', methods=['GET'])
 def login_get():
-    return render_template('login.html', message='Please login')
+
+    error = ""
+    if "error" in session:
+        error = session["error"]
+        del session["error"]
+
+    return render_template('login.html', message='Please login', error=error)
 
 
 @app.route('/login', methods=['POST'])
