@@ -1,6 +1,7 @@
 from flask import render_template, request, session, redirect
 from qa327 import app
 import qa327.backend as bn
+import re
 
 """
 This file defines the front-end part of the service.
@@ -18,6 +19,16 @@ def register_get():
 
 @app.route('/register', methods=['POST'])
 def register_post():
+    if 'logged_in' in session:
+        return redirect('/')
+        
+    patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+    patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$")
+
+    patternName = re.compile("^ ?[a-zA-Z0-9]+ ?")
+
+    
+
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
@@ -27,18 +38,27 @@ def register_post():
 
     if password != password2:
         error_message = "The passwords do not match"
+        return redirect('/login', error_message)
+    elif not patternEmail.fullmatch(email):
+        error_message =  '{} format is incorrect.'.format("Email")
+        return redirect('/login', error_message)
 
-    elif len(email) < 1:
-        error_message = "Email format error"
+    elif not patternPass.fullmatch(password):
+        error_message =  '{} format is incorrect.'.format("Password")
+        return redirect('/login', error_message)
 
     elif len(password) < 1:
         error_message = "Password not strong enough"
+
+    elif not patternName.fullmatch(name) or len(name) < 2 or len(name) > 20:
+        error_message =  '{} format is incorrect.'.format("Email")
     else:
         user = bn.get_user(email)
         if user:
-            error_message = "User exists"
+            error_message = "This email has been ALREADY use"
         elif not bn.register_user(email, name, password, password2):
             error_message = "Failed to store user info."
+
     # if there is any error messages when registering new user
     # at the backend, go back to the register page.
     if error_message:
