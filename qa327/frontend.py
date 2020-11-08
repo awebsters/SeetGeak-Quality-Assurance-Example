@@ -25,7 +25,7 @@ def register_post():
     patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
     patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$")
 
-    patternName = re.compile("^ ?[a-zA-Z0-9]+ ?")
+    patternName = re.compile("^\w[\w ]+\w$")
 
     
 
