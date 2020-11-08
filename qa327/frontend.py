@@ -1,5 +1,6 @@
 from flask import render_template, request, session, redirect
 from qa327 import app
+import re
 import qa327.backend as bn
 import re
 
@@ -81,6 +82,11 @@ def login_get():
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
+    #regex for email obtained from https://emailregex.com/
+    EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+    PASSWORD_REGEX = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$")
+    if  not EMAIL_REGEX.match(email) or not PASSWORD_REGEX.match(password):
+        return render_template('login.html', message='email/password format invalid')
     user = bn.login_user(email, password)
     if user:
         session['logged_in'] = user.email
@@ -98,7 +104,7 @@ def login_post():
         # code 303 is to force a 'GET' request
         return redirect('/', code=303)
     else:
-        return render_template('login.html', message='login failed')
+        return render_template('login.html', message='email/password combination incorrect')
 
 
 @app.route('/logout')
