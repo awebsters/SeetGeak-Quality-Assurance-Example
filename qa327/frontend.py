@@ -58,11 +58,11 @@ def register_post():
         session['error'] = error_message
         return redirect('/login')
 
-        user = bn.get_user(email)
-        if user:
-            error_message = "This email has been ALREADY use"
-        elif not bn.register_user(email, name, password, password2):
-            error_message = "Failed to store user info."
+    user = bn.get_user(email)
+    if user:
+        error_message = "This email has been ALREADY use"
+    elif not bn.register_user(email, name, password, password2):
+        error_message = "Failed to store user info."
 
     # if there is any error messages when registering new user
     # at the backend, go back to the register page.

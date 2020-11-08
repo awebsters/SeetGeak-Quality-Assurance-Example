@@ -39,14 +39,19 @@ def register_user(email, name, password, password2):
     :param password2: another password input to make sure the input is correct
     :return: an error message if there is any, or None if register succeeds
     """
+    try:
+        hashed_pw = generate_password_hash(password, method='sha256')
+        # store the encrypted password rather than the plain password
+        new_user = User(email=email, name=name, password=hashed_pw)
 
-    hashed_pw = generate_password_hash(password, method='sha256')
-    # store the encrypted password rather than the plain password
-    new_user = User(email=email, name=name, password=hashed_pw)
-
-    db.session.add(new_user)
-    db.session.commit()
-    return None
+        db.session.add(new_user)
+        db.session.commit()
+        print("YAYYY")
+        
+    except:
+        return False
+            
+    return True
 
 
 def get_all_tickets():
