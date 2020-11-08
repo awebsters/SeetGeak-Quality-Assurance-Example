@@ -1,4 +1,4 @@
-from flask import render_template, request, session, redirect, url_for
+from flask import render_template, request, session, redirect
 from qa327 import app
 import qa327.backend as bn
 import re
