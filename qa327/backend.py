@@ -46,8 +46,6 @@ def register_user(email, name, password, password2):
 
         db.session.add(new_user)
         db.session.commit()
-        print("YAYYY")
-        
     except:
         return False
             
