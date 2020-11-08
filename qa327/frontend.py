@@ -27,8 +27,6 @@ def register_post():
 
     patternName = re.compile("^\w[\w ]+\w$")
 
-    
-
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
@@ -72,12 +70,12 @@ def register_post():
 @app.route('/login', methods=['GET'])
 def login_get():
 
-    error = ""
+    message = 'Please login'
     if "error" in session:
-        error = session["error"]
+        message = session["error"]
         del session["error"]
 
-    return render_template('login.html', message='Please login', error=error)
+    return render_template('login.html', message=message)
 
 
 @app.route('/login', methods=['POST'])
