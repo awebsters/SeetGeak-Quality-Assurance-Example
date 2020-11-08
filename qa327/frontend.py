@@ -50,9 +50,6 @@ def register_post():
         session['error'] = error_message
         return redirect('/login')
 
-    elif len(password) < 1:
-        error_message = "Password not strong enough"
-
     elif not patternName.fullmatch(name) or len(name) < 2 or len(name) > 20:
         error_message =  '{} format is incorrect.'.format("Name")
         session['error'] = error_message
