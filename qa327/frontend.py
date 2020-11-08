@@ -130,6 +130,11 @@ def profile(user):
 
 @app.route('/sell', methods=['POST'])
 def sell():
+    """
+    Route to sell a new ticket. 
+    This route will validate the ticket form, if valid it will use a backend function
+    to commit to the database  
+    """
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
@@ -141,9 +146,19 @@ def sell():
 
 @app.route('/buy', methods=['POST'])
 def buy():
+    """
+    Route to buy a ticket.
+    This route will validate the ticket form, if valid it will update the database
+    through a backend function
+    """
     return redirect('/', code=303)
 
 
 @app.route('/update', methods=['POST'])
 def profile_post():
+    """
+    Route to update a ticket.
+    This route will validate the ticket form, if valid it will update the ticket on the database
+    through a backend function
+    """
     return redirect('/', code=303)
