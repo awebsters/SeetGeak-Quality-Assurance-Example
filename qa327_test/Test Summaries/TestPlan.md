@@ -1,5 +1,4 @@
--   How test cases of different levels (frontend, backend units,
-    > integration) are organized.
+-   How test cases of different levels (frontend, backend units, integration) are organized.
 
 They are organized into different folders, with their own test scripts.
 All the folders are located in the test directory. Front end, back end
@@ -47,15 +46,13 @@ python
 
 Unit tests for every specification
 
--   Environemnts (all the local environment and the cloud environment)
-    > for the testing.
+-   Environemnts (all the local environment and the cloud environment) for the testing.
 
 Using Github Actions, tests will be used for merge requests. For local
 environments, devs can run the test scripts themselves from the
 organized folders.
 
--   Responsibility (who is responsible for which test case, and in case
-    > of failure, who should you contact)
+-   Responsibility (who is responsible for which test case, and in case of failure, who should you contact)
 
 R1 /login - Max
 
@@ -76,8 +73,7 @@ R8 /\* - Max
 In the case of failure contact the tester for that route. For example,
 if a failure is found in /login contact Max.
 
--   Budget Management (you have limited CI action minutes, how to
-    > monitor, keep track and minimize unncessary cost)
+-   Budget Management (you have limited CI action minutes, how to monitor, keep track and minimize unncessary cost)
 
 We only run CI action for vital tests. We also don't send it to test
 until every member has submitted a code review, and issues have been
