@@ -24,7 +24,7 @@ def register_post():
         return redirect('/')
         
     patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-    patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$")
+    patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
 
     patternName = re.compile("^\w[\w ]+\w$")
 
@@ -84,7 +84,7 @@ def login_post():
     password = request.form.get('password')
     #regex for email obtained from https://emailregex.com/
     EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-    PASSWORD_REGEX = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$")
+    PASSWORD_REGEX = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
     if  not EMAIL_REGEX.match(email) or not PASSWORD_REGEX.match(password):
         return render_template('login.html', message='email/password format invalid')
     user = bn.login_user(email, password)
