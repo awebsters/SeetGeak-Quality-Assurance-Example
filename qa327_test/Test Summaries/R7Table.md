@@ -1,4 +1,0 @@
-| Specification                                                                                                                                | Test ID | Purpose                                                            |
-|----------------------------------------------------------------------------------------------------------------------------------------------|---------|--------------------------------------------------------------------|
-| Logout will invalid the current session and redirect to the login page. After logout, the user shouldn't be able to access restricted pages. | R7.1.1  | Check that a user can't access restricted pages after they log out |
-| For any other requests except the ones above, the system should return a 404 error                                                           | R8.1.1  | Check that requests for pages that don't exist return 404 errors   |
