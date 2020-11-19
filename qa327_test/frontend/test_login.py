@@ -11,7 +11,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 test_user = User(
     email='test_frontend@test.com',
     name='test_frontend',
-    password=generate_password_hash('Test1234!')
+    password=generate_password_hash('Test1234!', method='sha256'),
+    balance=5000
 )
 
 # Moch some sample tickets
@@ -45,7 +46,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.open(base_url + '/login')
          # fill email and password
         self.type("#email", "test_frontend@test.com")
-        self.type("#password", "test_frontend")
+        self.type("#password", "Test1234!")
         # click enter button
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
@@ -56,7 +57,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.open(base_url + '/login')
          # fill email and password
         self.type("#email", "test_frontend.com")
-        self.type("#password", "test_frontend")
+        self.type("#password", "Test1234!'")
         # click enter button
         self.click('input[type="submit"]')
         self.assert_element("#message")
@@ -68,7 +69,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.open(base_url + '/login')
          # fill email and password
         self.type("#email", "test@frontendcom")
-        self.type("#password", "test_frontend")
+        self.type("#password", "Test1234!'")
         # click enter button
         self.click('input[type="submit"]')
         self.assert_element("#message")
@@ -96,7 +97,7 @@ class FrontEndLoginPageTest(BaseCase):
         # open base page
         self.open(base_url + '/login')
          # fill  password
-        self.type("#password", "test_frontend")
+        self.type("#password", "Test1234!'")
         # click enter button
         self.click('input[type="submit"]')
         errorMessage = self.get_attribute("#password", "required")
