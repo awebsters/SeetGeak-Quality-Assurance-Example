@@ -16,7 +16,7 @@
 <div id="tickets">
 {% for ticket in tickets %}
     <div>
-        <h4>{{ ticket.name }} for ${{ ticket.price }} with {{ ticket.quantity }} remaining, contact {{ ticket.email }}</h4>
+        <h4 id='ticket'>{{ ticket.name }} for ${{ ticket.price }} with {{ ticket.quantity }} remaining, contact {{ ticket.email }}</h4>
     </div>
 {% endfor %}
 </div>

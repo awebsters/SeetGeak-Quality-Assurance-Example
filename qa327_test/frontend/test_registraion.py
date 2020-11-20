@@ -3,6 +3,7 @@ from time import sleep
 import pytest
 from seleniumbase import BaseCase
 
+
 from qa327_test.conftest import base_url
 from unittest.mock import patch
 from qa327.models import db, User
@@ -85,3 +86,6 @@ class FrontEndHomePageTest(BaseCase):
         # make sure it shows proper error message
         self.assert_element("#message")
         self.assert_text("email/password combination incorrect", "#message")
+
+
+

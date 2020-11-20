@@ -55,7 +55,7 @@ def register_post():
 
     user = bn.get_user(email)
     if user:
-        error_message = "This email has been ALREADY use"
+        error_message = "This email has been ALREADY used"
     elif not bn.register_user(email, name, password, password2):
         error_message = "Failed to store user info."
 
