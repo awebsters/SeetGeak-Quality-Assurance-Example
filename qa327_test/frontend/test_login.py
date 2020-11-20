@@ -53,7 +53,8 @@ class FrontEndLoginPageTest(BaseCase):
         self.type("#password", "Test1234!")
         # click enter button
         self.click('input[type="submit"]')
-        self.assert_element("#welcome-header")
+        # check that url is '/'
+        self.assert_equal(self.get_current_url(), base_url + '/')
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_no_error(self, *_):
         #R1.7.1
