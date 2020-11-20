@@ -1,6 +1,7 @@
 import pytest
 from seleniumbase import BaseCase
 
+from qa327_test.conftest import base_url
 
 
 class PageNotFoundTest(BaseCase):
