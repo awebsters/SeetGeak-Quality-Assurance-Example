@@ -1,13 +1,9 @@
-from time import sleep
-
-import pytest
 from seleniumbase import BaseCase
-
 
 from qa327_test.conftest import base_url
 from unittest.mock import patch
-from qa327.models import db, User
-from werkzeug.security import generate_password_hash, check_password_hash
+from qa327.models import User
+from werkzeug.security import generate_password_hash
 
 # Moch a sample user
 test_user = User(
@@ -20,14 +16,12 @@ test_user = User(
 
 
 class RegistrationPageTest(BaseCase):
-
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_redirect(self, *_):
         """
         R2.1.1 - Tests if the homepage will redirect to / with a valid session
 
         """
-
 
         #Invalidate any logged in sessions
         self.open(base_url + '/logout')
@@ -38,10 +32,9 @@ class RegistrationPageTest(BaseCase):
         self.type("#password", "Test1234!")
         # Submit
         self.click('input[type="submit"]')
-        sleep(2)
         # Open register page
         self.open(base_url + '/register')
-        sleep(2)
+
         self.assert_equal(self.get_current_url(), base_url + '/')
 
     def test_login_not_redirect(self, *_):
@@ -71,16 +64,7 @@ class RegistrationPageTest(BaseCase):
         self.assert_element("#password")
         self.assert_element("#password2")
 
-    def test_registration_POST_request(self, *_):
-        """
-        R2.4.1- Check if a valid POST request can be submited to /register page and confirm success
 
-        """
-        #Invalidate any logged in sessions
-        self.open(base_url + '/logout')
-        # Open register page
-        self.open(base_url + '/register')
-        #Check if post can be sent to
 
     @patch('qa327.backend.get_user', return_value=None)
     @patch('qa327.backend.register_user', return_value=True)
@@ -102,7 +86,7 @@ class RegistrationPageTest(BaseCase):
 
         self.click('input[type="submit"]')
 
-        self.assert_equal(self.get_current_url(), base_url + '/login')
+        self.assert_text("Please login", "#message")
 
     @patch('qa327.backend.get_user', return_value=None)
     def test_registration_invalid_email_input(self, *_):

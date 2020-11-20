@@ -14,14 +14,13 @@ The html templates are stored in the 'templates' folder.
 
 @app.route('/register', methods=['GET'])
 def register_get():
-    # templates are stored in the templates folder
+    if 'logged_in' in session:
+        return redirect('/')
     return render_template('register.html', message='')
 
 
 @app.route('/register', methods=['POST'])
 def register_post():
-    if 'logged_in' in session:
-        return redirect('/')
         
     patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
     patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
