@@ -25,7 +25,7 @@ def register_post():
     patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
     patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
 
-    patternName = re.compile("^\w[\w ]+\w$")
+    patternName = re.compile(r"^\w[\w ]+\w$")
 
     email = request.form.get('email')
     name = request.form.get('name')
