@@ -178,6 +178,10 @@ def sell():
     bn.create_ticket(name, quantity, price, date, session['logged_in'])
     return redirect('/', code=303)
 
+@app.route('/sell', methods=['GET'])
+def sell_get():
+    if 'logged_in' not in session:
+        return redirect('/login')
 
 @app.route('/buy', methods=['POST'])
 def buy():
@@ -188,6 +192,10 @@ def buy():
     """
     return redirect('/', code=303)
 
+@app.route('/buy', methods=['GET'])
+def buy_get():
+    if 'logged_in' not in session:
+        return redirect('/login')
 
 @app.route('/update', methods=['POST'])
 def profile_post():
@@ -197,3 +205,8 @@ def profile_post():
     through a backend function
     """
     return redirect('/', code=303)
+
+@app.route('/update', methods=['GET'])
+def update_get():
+    if 'logged_in' not in session:
+        return redirect('/login')
