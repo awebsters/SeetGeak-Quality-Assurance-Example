@@ -24,16 +24,19 @@ test_tickets = [
 class FrontEndLoginPageTest(BaseCase):
 
     def test_login_page(self, *_):
+        #R1.1
         self.open(base_url+'/logout')
         # open base page
         r=requests.get(base_url+'/login')
         assert not r.is_redirect
     def test_login_post_empty(self, *_):
+        #R1.5.1
         self.open(base_url+'/logout')
         # open base page
         r=requests.post(base_url+'/login',{'email':'','password':''})
         assert not r.is_redirect
     def test_login_message(self, *_):
+        #R1.2
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -41,6 +44,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_text("Please login", "#message")
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_submit(self, *_):
+        #R1.10.1
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -51,7 +55,20 @@ class FrontEndLoginPageTest(BaseCase):
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
     @patch('qa327.backend.get_user', return_value=test_user)
+    def test_login_no_error(self, *_):
+        #R1.7.1
+        self.open(base_url+'/logout')
+        # open base page
+        self.open(base_url + '/login')
+         # fill email and password
+        self.type("#email", "test_frontend@test.com")
+        self.type("#password", "Test1234!")
+        # click enter button
+        self.click('input[type="submit"]')
+        self.assert_text_not_visible("email/password format incorrect","#message")
+    @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_email_no_at(self, *_):
+        #R1.7.2
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -64,6 +81,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_text("email/password format invalid", "#message")
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_email_no_dot(self, *_):
+        #R1.7.2
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -75,6 +93,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("email/password format invalid", "#message")
     def test_login_elements(self, *_):
+        #R1.4
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -82,6 +101,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_element("#password")
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_empty_password(self, *_):
+        #R1.6.2
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -93,6 +113,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_true(errorMessage)
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_empty_email(self, *_):
+        #R1.6.1
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -104,6 +125,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_true(errorMessage)
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_empty_elements(self, *_):
+        #R1.6.3
         self.open(base_url+'/logout')
         # open login page
         self.open(base_url + '/login')
@@ -115,6 +137,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_true(emailErrorMessage)
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_invalid_pass_length(self, *_):
+        #R1.8.1
         self.open(base_url+'/logout')
         # open login page
         self.open(base_url + '/login')
@@ -125,6 +148,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("email/password format invalid", "#message")
     def test_login_invalid_pass_no_lower(self, *_):
+        #R1.8.3
         self.open(base_url+'/logout')
         # open login page
         self.open(base_url + '/login')
@@ -135,6 +159,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("email/password format invalid", "#message")
     def test_login_invalid_pass_no_upper(self, *_):
+        #R1.8.2
         self.open(base_url+'/logout')
         # open login page
         self.open(base_url + '/login')
@@ -145,6 +170,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("email/password format invalid", "#message")  
     def test_login_invalid_pass_no_special_character(self, *_):
+        #R1.8.4
         self.open(base_url+'/logout')
         # open login page
         self.open(base_url + '/login')
@@ -156,6 +182,7 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_text("email/password format invalid", "#message")  
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_redirect(self, *_):
+        #R1.3.1
         self.open(base_url+'/logout')
         # open base page
         self.open(base_url + '/login')
@@ -166,3 +193,16 @@ class FrontEndLoginPageTest(BaseCase):
         self.click('input[type="submit"]')
         self.open(base_url + '/login')
         self.assert_element("#welcome-header")
+    @patch('qa327.backend.get_user', return_value=test_user)
+    def test_login_invalid_combo(self, *_):
+        #R1.11.1
+        self.open(base_url+'/logout')
+        # open base page
+        self.open(base_url + '/login')
+         # fill email and password
+        self.type("#email", "tesgfdgf123@test.com")
+        self.type("#password", "Tesgggggg5dr234!")
+        # click enter button
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("email/password combination incorrect", "#message")

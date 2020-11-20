@@ -10,6 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class PageNotFoundTest(BaseCase):
 
     def test_404_page_open(self, *_):
+        #R8.1.1
         # open non-existant page
         self.open(base_url + "/test")
         # make sure 404 error is displayed
