@@ -14,6 +14,7 @@ test cases for r7
 """
 class FrontEndRestrictedUrlTest(BaseCase):
     def test_open_sell(self, *_):
+        #R7.1.1
         # open logout page
         self.open(base_url + '/logout')
         # try to open sell
@@ -23,6 +24,7 @@ class FrontEndRestrictedUrlTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("Please login", "#message")
     def test_open_home(self, *_):
+        #R7.1.1
         # open logout page
         self.open(base_url + '/logout')
         # try to open the homepage 
@@ -32,6 +34,7 @@ class FrontEndRestrictedUrlTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("Please login", "#message")
     def test_open_buy(self, *_):
+        #R7.1.1
         # open logout page
         self.open(base_url + '/logout')
         # try to open buy
@@ -41,6 +44,7 @@ class FrontEndRestrictedUrlTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("Please login", "#message")
     def test_open_update(self, *_):
+        #R7.1.1
         # open logout page
         self.open(base_url + '/logout')
         # try to open update
