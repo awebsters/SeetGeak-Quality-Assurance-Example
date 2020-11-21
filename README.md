@@ -1,6 +1,6 @@
-# GitHub Actions CI Template for Selenium+Flask MVC
+# SeetGeak High Quality Remake
 
-[![](https://github.com/CISC-CMPE-327/CI-Python/workflows/Python%20application/badge.svg)](https://github.com/CISC-CMPE-327/CI-Python/actions)
+[![](https://github.com/awebsters/SeetGeak-Group-7/workflows/Python%20application-Build/badge.svg)](https://github.com/awebsters/SeetGeak-Group-7/actions)
 
 ## Instructions: 
 
