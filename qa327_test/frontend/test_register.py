@@ -262,7 +262,28 @@ class RegistrationPageTest(BaseCase):
         self.assert_text("Name format is incorrect.", "#message")
 
     @patch('qa327.backend.get_user', return_value=None)
-    def test_registration_username_invalid_space(self, *_):
+    def test_registration_username_invalid_space_start(self, *_):
+        """
+        R2.7.3- Check failure with a space at the start
+        """
+
+        # Invalidate any logged in sessions
+        self.open(base_url + '/logout')
+        # Open register page
+        self.open(base_url + '/register')
+        # Fill out form
+
+        self.type("#email", "test_frontend@test.com")
+        self.type("#name", " Test")
+        self.type("#password", "Test1234!")
+        self.type("#password2", "Test1234!")
+
+        self.click('input[type="submit"]')
+
+        self.assert_text("Name format is incorrect.", "#message")
+
+    @patch('qa327.backend.get_user', return_value=None)
+    def test_registration_username_invalid_space_end(self, *_):
         """
         R2.7.4- Check failure with a space at the end
         """
