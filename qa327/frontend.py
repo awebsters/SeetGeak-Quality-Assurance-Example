@@ -14,19 +14,18 @@ The html templates are stored in the 'templates' folder.
 
 @app.route('/register', methods=['GET'])
 def register_get():
-    # templates are stored in the templates folder
+    if 'logged_in' in session:
+        return redirect('/')
     return render_template('register.html', message='')
 
 
 @app.route('/register', methods=['POST'])
 def register_post():
-    if 'logged_in' in session:
-        return redirect('/')
         
     patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-    patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$")
+    patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
 
-    patternName = re.compile("^\w[\w ]+\w$")
+    patternName = re.compile(r"^\w[\w ]+\w$")
 
     email = request.form.get('email')
     name = request.form.get('name')
@@ -55,7 +54,7 @@ def register_post():
 
     user = bn.get_user(email)
     if user:
-        error_message = "This email has been ALREADY use"
+        error_message = "This email has been ALREADY used"
     elif not bn.register_user(email, name, password, password2):
         error_message = "Failed to store user info."
 
@@ -85,7 +84,7 @@ def login_post():
     password = request.form.get('password')
     #regex for email obtained from https://emailregex.com/
     EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-    PASSWORD_REGEX = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$")
+    PASSWORD_REGEX = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
     if  not EMAIL_REGEX.match(email) or not PASSWORD_REGEX.match(password):
         return render_template('login.html', message='email/password format invalid')
     user = bn.login_user(email, password)
@@ -164,6 +163,7 @@ def profile(user):
 def page_not_found(e):
     return render_template('404.html'), 404
 
+
 @app.route('/sell', methods=['POST'])
 def sell():
     """
@@ -171,6 +171,8 @@ def sell():
     This route will validate the ticket form, if valid it will use a backend function
     to commit to the database  
     """
+    if 'logged_in' not in session:
+        return redirect('/login')
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
@@ -179,7 +181,6 @@ def sell():
     bn.create_ticket(name, quantity, price, date, session['logged_in'])
     return redirect('/', code=303)
 
-
 @app.route('/buy', methods=['POST'])
 def buy():
     """
@@ -187,8 +188,9 @@ def buy():
     This route will validate the ticket form, if valid it will update the database
     through a backend function
     """
+    if 'logged_in' not in session:
+        return redirect('/login')
     return redirect('/', code=303)
-
 
 @app.route('/update', methods=['POST'])
 def profile_post():
@@ -197,4 +199,7 @@ def profile_post():
     This route will validate the ticket form, if valid it will update the ticket on the database
     through a backend function
     """
+    if 'logged_in' not in session:
+        return redirect('/login')
     return redirect('/', code=303)
+
