@@ -19,7 +19,7 @@ class RegistrationPageTest(BaseCase):
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_login_redirect(self, *_):
         """
-        R2.1.1 - Tests if the homepage will redirect to / with a valid session
+        R2.1.1 - Tests if the register will redirect to / with a valid session
 
         """
 
