@@ -14,12 +14,12 @@ class FrontEndRestrictedUrlTest(BaseCase):
         #R7.1.1
         # open logout page
         self.open(base_url + '/logout')
-        # try to open sell
-        self.open(base_url + '/sell')
+        # try to send a post request to sell
+        r=requests.post(base_url+'/sell')
         #check that user is not given access
-        #check user is redirected to login
-        self.assert_element("#message")
-        self.assert_text("Please login", "#message")
+        #check user is still on login
+        assert not r.is_redirect
+        self.assert_equal(self.get_current_url(), base_url + '/login')
     def test_open_home(self, *_):
         #R7.1.1
         # open logout page
@@ -34,20 +34,20 @@ class FrontEndRestrictedUrlTest(BaseCase):
         #R7.1.1
         # open logout page
         self.open(base_url + '/logout')
-        # try to open buy
-        self.open(base_url + '/buy')
+        # try to send a post request to buy
+        r=requests.post(base_url+'/sell')
         #check that user is not given access
-        #check user is redirected to login
-        self.assert_element("#message")
-        self.assert_text("Please login", "#message")
+        #check user is still on login
+        assert not r.is_redirect
+        self.assert_equal(self.get_current_url(), base_url + '/login')
     def test_open_update(self, *_):
         #R7.1.1
         # open logout page
         self.open(base_url + '/logout')
-        # try to open update
-        self.open(base_url + '/update')
+        # try to send a post request to update
+        r=requests.post(base_url+'/sell')
         #check that user is not given access
-        #check user is redirected to login
-        self.assert_element("#message")
-        self.assert_text("Please login", "#message")
+        #check user is still on login
+        assert not r.is_redirect
+        self.assert_equal(self.get_current_url(), base_url + '/login')
 

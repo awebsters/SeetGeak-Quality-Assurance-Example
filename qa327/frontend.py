@@ -163,6 +163,7 @@ def profile(user):
 def page_not_found(e):
     return render_template('404.html'), 404
 
+
 @app.route('/sell', methods=['POST'])
 def sell():
     """
@@ -170,6 +171,8 @@ def sell():
     This route will validate the ticket form, if valid it will use a backend function
     to commit to the database  
     """
+    if 'logged_in' not in session:
+        return redirect('/login')
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
@@ -178,11 +181,6 @@ def sell():
     bn.create_ticket(name, quantity, price, date, session['logged_in'])
     return redirect('/', code=303)
 
-@app.route('/sell', methods=['GET'])
-def sell_get():
-    if 'logged_in' not in session:
-        return redirect('/login')
-
 @app.route('/buy', methods=['POST'])
 def buy():
     """
@@ -190,12 +188,9 @@ def buy():
     This route will validate the ticket form, if valid it will update the database
     through a backend function
     """
-    return redirect('/', code=303)
-
-@app.route('/buy', methods=['GET'])
-def buy_get():
     if 'logged_in' not in session:
         return redirect('/login')
+    return redirect('/', code=303)
 
 @app.route('/update', methods=['POST'])
 def profile_post():
@@ -204,9 +199,7 @@ def profile_post():
     This route will validate the ticket form, if valid it will update the ticket on the database
     through a backend function
     """
-    return redirect('/', code=303)
-
-@app.route('/update', methods=['GET'])
-def update_get():
     if 'logged_in' not in session:
         return redirect('/login')
+    return redirect('/', code=303)
+
