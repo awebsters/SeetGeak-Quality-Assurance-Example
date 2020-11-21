@@ -68,7 +68,8 @@ def register_post():
 
 @app.route('/login', methods=['GET'])
 def login_get():
-
+    if 'logged_in' in session:
+        return redirect('/')
     message = 'Please login'
     if "error" in session:
         message = session["error"]
