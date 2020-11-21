@@ -85,3 +85,6 @@ class FrontEndHomePageTest(BaseCase):
         # make sure it shows proper error message
         self.assert_element("#message")
         self.assert_text("email/password combination incorrect", "#message")
+
+
+

@@ -14,19 +14,18 @@ The html templates are stored in the 'templates' folder.
 
 @app.route('/register', methods=['GET'])
 def register_get():
-    # templates are stored in the templates folder
+    if 'logged_in' in session:
+        return redirect('/')
     return render_template('register.html', message='')
 
 
 @app.route('/register', methods=['POST'])
 def register_post():
-    if 'logged_in' in session:
-        return redirect('/')
         
     patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
     patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
 
-    patternName = re.compile("^\w[\w ]+\w$")
+    patternName = re.compile(r"^\w[\w ]+\w$")
 
     email = request.form.get('email')
     name = request.form.get('name')
@@ -55,7 +54,7 @@ def register_post():
 
     user = bn.get_user(email)
     if user:
-        error_message = "This email has been ALREADY use"
+        error_message = "This email has been ALREADY used"
     elif not bn.register_user(email, name, password, password2):
         error_message = "Failed to store user info."
 
