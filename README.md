@@ -1,6 +1,6 @@
 # SeetGeak High Quality Remake
 
-[![](https://github.com/awebsters/SeetGeak-Group-7/workflows/Python%20application-Build/badge.svg)](https://github.com/awebsters/SeetGeak-Group-7/actions)
+[![](https://github.com/awebsters/SeetGeak-Group-7/workflows/Python%20application/badge.svg)](https://github.com/awebsters/SeetGeak-Group-7/actions)
 
 ## Instructions: 
 
