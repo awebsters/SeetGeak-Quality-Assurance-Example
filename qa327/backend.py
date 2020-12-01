@@ -42,7 +42,7 @@ def register_user(email, name, password, password2):
     try:
         hashed_pw = generate_password_hash(password, method='sha256')
         # store the encrypted password rather than the plain password
-        new_user = User(email=email, name=name, password=hashed_pw)
+        new_user = User(email=email, name=name, password=hashed_pw, balance=1000)
 
         db.session.add(new_user)
         db.session.commit()
@@ -67,3 +67,16 @@ def create_ticket(name, quantity, price, date, email):
     db.session.add(new_ticket)
     db.session.commit()
     return None
+
+def buy_ticket(ticket, user, quantity):
+    user.balance -= quantity*ticket.price + (quantity*ticket.price*0.4)
+    seller = get_user(ticket.email)
+    if not seller.balance:
+        seller.balance = 0
+    seller.balance += quantity*ticket.price
+    if (ticket.quantity > quantity):
+        ticket.quantity -= quantity
+    else:
+        db.session.delete(ticket)
+    db.session.commit()
+    return None  

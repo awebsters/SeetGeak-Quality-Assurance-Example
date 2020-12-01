@@ -11,7 +11,6 @@ http requests from the client (browser) through templating.
 The html templates are stored in the 'templates' folder.
 """
 
-
 @app.route('/register', methods=['GET'])
 def register_get():
     if 'logged_in' in session:
@@ -190,6 +189,65 @@ def buy():
     """
     if 'logged_in' not in session:
         return redirect('/login')
+    email = session['logged_in']
+    user = bn.get_user(email)
+    name = request.form.get('name')
+    quantity = request.form.get('quantity')
+    tickets = bn.get_all_tickets()
+    if (len(name) > 60):
+        error_message = "Name is too long"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', buy_message=message, user=user, tickets=tickets)
+    if(name[0] == ' ' or name[len(name) - 1] == ' '):
+        error_message = "Name has space at beginning or end"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', buy_message=message, user=user, tickets=tickets)
+    if not (name.isalnum()):
+        error_message = "Name can only contain alphanumeric characters"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', buy_message=message, user=user, tickets=tickets)
+    if not (quantity.isnumeric()):
+        error_message = "Quantity must be a number"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', buy_message=message, user=user, tickets=tickets)
+    if(int(quantity) < 0 or int(quantity) > 100):
+        error_message = "Quantity must be greater than 0 and less than 100"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', buy_message=message, user=user, tickets=tickets)
+    if (bn.get_ticket(name)):
+        ticket = bn.get_ticket(name)
+        if ticket.quantity < int(quantity):
+            error_message = "There are not enought tickets available to satisfy your order"
+            session['error'] = error_message
+            message = session["error"]
+            del session["error"]
+            return render_template('index.html', buy_message=message, user=user, tickets=tickets)   
+        elif (user.balance < (ticket.price*int(quantity) + (ticket.price*int(quantity)*0.4))):
+            error_message = "Your balance is not large enough to complete the order"
+            session['error'] = error_message
+            message = session["error"]
+            del session["error"]
+            return render_template('index.html', buy_message=message, user=user, tickets=tickets)
+        else:
+           bn.buy_ticket(ticket, user, int(quantity))
+           message = "Tickets bought succesfully"
+        return render_template('index.html', buy_message=message, user=user, tickets=tickets)   
+    else:
+        error_message = "Ticket with that name does not exist"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', buy_message=message, user=user, tickets=tickets)
     return redirect('/', code=303)
 
 @app.route('/update', methods=['POST'])
