@@ -67,3 +67,15 @@ def create_ticket(name, quantity, price, date, email):
     db.session.add(new_ticket)
     db.session.commit()
     return None
+
+
+def update_ticket(name, quantity, price, date):
+    ticket = get_ticket(name)
+    if ticket != None:
+        ticket.quantity = quantity
+        ticket.price = price
+        ticket.date = date
+        db.session.update(ticket)
+        db.session.commit()
+
+    return None

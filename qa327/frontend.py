@@ -201,5 +201,10 @@ def profile_post():
     """
     if 'logged_in' not in session:
         return redirect('/login')
+    name = request.form.get('name')
+    quantity = request.form.get('quantity')
+    price = request.form.get('price')
+    date = request.form.get('date')
+    bn.update_ticket(name, quantity, price, date)
     return redirect('/', code=303)
 
