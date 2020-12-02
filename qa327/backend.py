@@ -66,7 +66,7 @@ def create_ticket(name, quantity, price, date, email):
                         price=price, date=date, email=email)
     db.session.add(new_ticket)
     db.session.commit()
-    return None
+
 #Backend functionality for ticket buying
 def buy_ticket(name, user, quantity):
     #Make sure ticket exists
