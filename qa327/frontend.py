@@ -238,21 +238,13 @@ def buy():
     quantity = request.form.get('quantity')
     #Get all tickets to pass to backend function
     tickets = bn.get_all_tickets()
-    #Checks to make sure name and quantity form values are valid, sends error if they are invalid 
-    if (len(name) > 60):
-        error_message = "Name is too long, it must be shorter than 60 characters"
-    elif(name[0] == ' ' or name[len(name) - 1] == ' '):
-        error_message = "Name has space at beginning or end"
-    elif not (name.isalnum()):
-        error_message = "Name can only contain alphanumeric characters"
-    elif not (quantity.isnumeric()):
-        error_message = "Quantity must be a number"
-    elif(int(quantity) < 0 or int(quantity) > 100):
-        error_message = "Quantity must be greater than 0 and less than or equal to 100"
-    elif (bn.buy_ticket(name,user,int(quantity))):
-        message = "Tickets bought succesfully"
-    else:
-        error_message = "Ticket could not be bought"
+
+    error_message = check_ticket_form(name, quantity)
+    if not error_message:
+        if bn.buy_ticket(name,user,int(quantity)):
+            message = "Tickets bought succesfully"
+        else:
+            error_message = "Ticket could not be bought"
     #Checks if there is an error, and if there is set the error message 
     if len(error_message) > 0:
         session['error'] = error_message
@@ -279,40 +271,14 @@ def update():
     price = request.form.get('price')
     date = request.form.get('date')
 
-    #Check if name is valid
-    if (len(name) > 60):
-        return displayUpdateMessage('Name is too long')
-
-    if (name[0] == ' ' or name[len(name) - 1] == ' '):
-        return displayUpdateMessage('Name has space at beginning or end')
-
-    if not (name.isalnum()):
-        return displayUpdateMessage('Name can only be alphanumeric')
+    error_message = check_ticket_form(name, quantity, price, date)
+    if error_message:
+        return displayUpdateMessage(error_message)
 
     #Check if ticket exists in database
     ticket = bn.get_ticket(name)
     if (ticket is None):
         return displayUpdateMessage('Ticket does not exist')
-
-    #Check if quantity is valid
-    if not (quantity.isnumeric()):
-        return displayUpdateMessage('Quantity must be a number')
-
-    if (int(quantity) < 0 or int(quantity) > 100):
-        return displayUpdateMessage('Quantity must be greater than 0 and less than 100')
-
-    #Check if price is valid
-    if not (price.isnumeric()):
-        return displayUpdateMessage('Price must be a number')
-
-    if (price < 10 or price > 100):
-        return displayUpdateMessage('Price has to be in range between 10 to 100')
-
-    #Check if date is valid
-    try:
-        datetime.strptime(date, "%Y-%m-%d")
-    except ValueError:
-        return displayUpdateMessage('Date must be given in format YYYYMMDD')
 
     #Update tickets to database
     bn.update_ticket(name, quantity, price, date)
