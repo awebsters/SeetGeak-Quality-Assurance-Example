@@ -259,8 +259,12 @@ def buy():
         message = session["error"]
         del session["error"]
     return render_template('index.html', buy_message=message, user=user, tickets=tickets)
+
+def displayUpdateMessage(message):
+    return render_template('index.html', update_message=message)
+  
 @app.route('/update', methods=['POST'])
-def profile_post():
+def update():
     """
     Route to update a ticket.
     This route will validate the ticket form, if valid it will update the ticket on the database
@@ -268,5 +272,50 @@ def profile_post():
     """
     if 'logged_in' not in session:
         return redirect('/login')
-    return redirect('/', code=303)
+
+    #Grab necessary information from update form
+    name = request.form.get('name')
+    quantity = request.form.get('quantity')
+    price = request.form.get('price')
+    date = request.form.get('date')
+
+    #Check if name is valid
+    if (len(name) > 60):
+        return displayUpdateMessage('Name is too long')
+
+    if (name[0] == ' ' or name[len(name) - 1] == ' '):
+        return displayUpdateMessage('Name has space at beginning or end')
+
+    if not (name.isalnum()):
+        return displayUpdateMessage('Name can only be alphanumeric')
+
+    #Check if ticket exists in database
+    ticket = bn.get_ticket(name)
+    if (ticket is None):
+        return displayUpdateMessage('Ticket does not exist')
+
+    #Check if quantity is valid
+    if not (quantity.isnumeric()):
+        return displayUpdateMessage('Quantity must be a number')
+
+    if (int(quantity) < 0 or int(quantity) > 100):
+        return displayUpdateMessage('Quantity must be greater than 0 and less than 100')
+
+    #Check if price is valid
+    if not (price.isnumeric()):
+        return displayUpdateMessage('Price must be a number')
+
+    if (price < 10 or price > 100):
+        return displayUpdateMessage('Price has to be in range between 10 to 100')
+
+    #Check if date is valid
+    try:
+        datetime.strptime(date, "%Y-%m-%d")
+    except ValueError:
+        return displayUpdateMessage('Date must be given in format YYYYMMDD')
+
+    #Update tickets to database
+    bn.update_ticket(name, quantity, price, date)
+    return displayUpdateMessage('Successfully updated tickets')
+
 
