@@ -202,59 +202,51 @@ def profile_post():
     """
     if 'logged_in' not in session:
         return redirect('/login')
+
+    #Grab necessary information from update form
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
     date = request.form.get('date')
+    ticket = bn.get_ticket(name)
+    error_message = ''
+
     if (len(name) > 60):
-        error_message = "Name is too long"
-        session['error'] = error_message
-        message = session["error"]
-        del session["error"]
-        return render_template('index.html', update_message=message)
-    else:
-        ticket = bn.get_ticket(name)
-        if ticket is None:
-            error_message = "Ticket does not exist"
-            session['error'] = error_message
-            del session['error']
-            return render_template('index.html', update_message=session["error"])
-    if (name[0] == ' ' or name[len(name) - 1] == ' '):
-        error_message = "Name has space at beginning or end"
-        session['error'] = error_message
-        message = session["error"]
-        del session["error"]
-        return render_template('index.html', update_message=message)
-    if not (name.isalnum()):
-        error_message = "Name can only contain alphanumeric characters"
-        session['error'] = error_message
-        message = session["error"]
-        del session["error"]
-        return render_template('index.html', update_message=message)
-    if not (quantity.isnumeric()):
-        error_message = "Quantity must be a number"
-        session['error'] = error_message
-        message = session["error"]
-        del session["error"]
-        return render_template('index.html', update_message=message)
-    if (int(quantity) < 0 or int(quantity) > 100):
-        error_message = "Quantity must be greater than 0 and less than 100"
-        session['error'] = error_message
-        message = session["error"]
-        del session["error"]
-        return render_template('index.html', update_message=message)
-    if (price < 10 or price > 100):
-        error_message = "Price has to be in range between 10 to 100"
-        session['error'] = error_message
-        message = session["error"]
-        del session["error"]
-        return render_template('index.html', update_message=message)
+        error_message = 'Name is too long'
+
+    elif (ticket is None):
+        error_message = "Ticket does not exist"
+
+    elif (name[0] == ' ' or name[len(name) - 1] == ' '):
+        error_message = 'Name has space at beginning or end'
+
+    elif not (name.isalnum()):
+        error_message = 'Name can only be alphanumeric'
+
+    elif not (quantity.isnumeric()):
+        error_message = 'Quantity must be a number'
+
+    elif (int(quantity) < 0 or int(quantity) > 100):
+        error_message = 'Quantity must be greater than 0 and less than 100'
+
+    elif not (price.isnumeric()):
+        error_message = 'Price must be a number'
+
+    elif (price < 10 or price > 100):
+        error_message = 'Price has to be in range between 10 to 100'
+
     try:
         datetime.datetime.strptime(date, "%Y-%m-%d")
     except ValueError:
-        error_message = "Date must be given in format YYYYMMDD"
+        error_message = 'Date must be given in format YYYYMMDD'
+
+    if (len(error_message) == 0):
+        bn.update_ticket(name, quantity, price, date)
+        message = "Successfully updated tickets"
+    else:
         session['error'] = error_message
+        message = session['error']
         del session['error']
-        return render_template('index.html', update_message=session['error'])
-    bn.update_ticket(name, quantity, price, date)
-    return redirect('/', code=303)
+    return render_template('index.html', update_message=message)
+
+
