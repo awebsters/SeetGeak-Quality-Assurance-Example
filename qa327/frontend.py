@@ -3,6 +3,7 @@ from qa327 import app
 import re
 import qa327.backend as bn
 import re
+from datetime import datetime
 
 """
 This file defines the front-end part of the service.
@@ -164,6 +165,36 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+def check_ticket_form(name=None, quantity=None, price=None, date=None):
+    '''
+    Will check for valid form entries for name, quantity, price, and date of a ticket form.
+    Will not validate a parameter if its value is passed in as None
+    :return: An error message string or None if no error found
+    '''
+    if name:
+        if name[0] == ' ' or name[len(name) - 1] == ' ':
+            return "Name has space at beginning or end"
+        elif not name.isalnum():
+            return "Name can only contain alphanumeric characters"
+        elif len(name) > 60:
+            return "Name is too long, it must be shorter than 60 characters"
+    if quantity:
+        if not quantity.isnumeric():
+            return "Quantity must be a number"
+        elif int(quantity) < 0 or int(quantity) > 100:
+            return "Quantity must be greater than 0 and less than or equal to 100"
+    if price:
+        try:
+            float(price)
+        except ValueError:
+            return "Price must be a number"
+        if float(price) < 10 or float(price) > 100:
+            return "Price must be greater than or equal to 10 and less than or equal to 100"
+    if date:
+        if not datetime.strptime(date, "%Y-%m-%d"):
+            return "Date must be in the format YYYY-MM-DD"
+
+
 @app.route('/sell', methods=['POST'])
 def sell():
     """
@@ -173,13 +204,21 @@ def sell():
     """
     if 'logged_in' not in session:
         return redirect('/login')
+
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
     date = request.form.get('date')
-    ticket = bn.get_ticket(name)
-    bn.create_ticket(name, quantity, price, date, session['logged_in'])
+
+    error_message = check_ticket_form(name, quantity, price, date)
+    tickets = bn.get_all_tickets()
+    user = bn.get_user(session['logged_in'])
+    if error_message:
+        return render_template('index.html', sell_message=error_message, tickets=tickets, user=user)
+
+    bn.create_ticket(name, quantity, price, date, user.email)
     return redirect('/', code=303)
+
 
 @app.route('/buy', methods=['POST'])
 def buy():

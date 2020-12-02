@@ -66,4 +66,3 @@ def create_ticket(name, quantity, price, date, email):
                         price=price, date=date, email=email)
     db.session.add(new_ticket)
     db.session.commit()
-    return None
