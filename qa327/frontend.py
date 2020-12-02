@@ -193,6 +193,9 @@ def buy():
         return redirect('/login')
     return redirect('/', code=303)
 
+def displayUpdateMessage(message):
+    return render_template('index.html', update_message=message)
+
 @app.route('/update', methods=['POST'])
 def profile_post():
     """
@@ -208,45 +211,44 @@ def profile_post():
     quantity = request.form.get('quantity')
     price = request.form.get('price')
     date = request.form.get('date')
-    ticket = bn.get_ticket(name)
-    error_message = ''
 
+    #Check if name is valid
     if (len(name) > 60):
-        error_message = 'Name is too long'
+        return displayUpdateMessage('Name is too long')
 
-    elif (ticket is None):
-        error_message = "Ticket does not exist"
+    if (name[0] == ' ' or name[len(name) - 1] == ' '):
+        return displayUpdateMessage('Name has space at beginning or end')
 
-    elif (name[0] == ' ' or name[len(name) - 1] == ' '):
-        error_message = 'Name has space at beginning or end'
+    if not (name.isalnum()):
+        return displayUpdateMessage('Name can only be alphanumeric')
 
-    elif not (name.isalnum()):
-        error_message = 'Name can only be alphanumeric'
+    #Check if ticket exists in database
+    ticket = bn.get_ticket(name)
+    if (ticket is None):
+        return displayUpdateMessage('Ticket does not exist')
 
-    elif not (quantity.isnumeric()):
-        error_message = 'Quantity must be a number'
+    #Check if quantity is valid
+    if not (quantity.isnumeric()):
+        return displayUpdateMessage('Quantity must be a number')
 
-    elif (int(quantity) < 0 or int(quantity) > 100):
-        error_message = 'Quantity must be greater than 0 and less than 100'
+    if (int(quantity) < 0 or int(quantity) > 100):
+        return displayUpdateMessage('Quantity must be greater than 0 and less than 100')
 
-    elif not (price.isnumeric()):
-        error_message = 'Price must be a number'
+    #Check if price is valid
+    if not (price.isnumeric()):
+        return displayUpdateMessage('Price must be a number')
 
-    elif (price < 10 or price > 100):
-        error_message = 'Price has to be in range between 10 to 100'
+    if (price < 10 or price > 100):
+        return displayUpdateMessage('Price has to be in range between 10 to 100')
 
+    #Check if date is valid
     try:
         datetime.datetime.strptime(date, "%Y-%m-%d")
     except ValueError:
-        error_message = 'Date must be given in format YYYYMMDD'
+        return displayUpdateMessage('Date must be given in format YYYYMMDD')
 
-    if (len(error_message) == 0):
-        bn.update_ticket(name, quantity, price, date)
-        message = "Successfully updated tickets"
-    else:
-        session['error'] = error_message
-        message = session['error']
-        del session['error']
-    return render_template('index.html', update_message=message)
+    #Update tickets to database
+    bn.update_ticket(name, quantity, price, date)
+    return displayUpdateMessage('Successfully updated tickets')
 
 
