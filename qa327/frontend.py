@@ -210,18 +210,10 @@ def buy():
         error_message = "Quantity must be a number"
     elif(int(quantity) < 0 or int(quantity) > 100):
         error_message = "Quantity must be greater than 0 and less than or equal to 100"
-    elif (bn.get_ticket(name)):
-        ticket = bn.get_ticket(name)
-        if ticket.quantity < int(quantity):
-            error_message = "There are not enought tickets available to satisfy your order"   
-        elif (user.balance < (ticket.price*int(quantity) + (ticket.price*int(quantity)*0.4))):
-            error_message = "Your balance is not large enough to complete the order"
-        else:
-            #calls the backend function to buy the tickets
-            bn.buy_ticket(ticket, user, int(quantity))
-            message = "Tickets bought succesfully"
+    elif (bn.buy_ticket(name,user,int(quantity))):
+        message = "Tickets bought succesfully"
     else:
-        error_message = "Ticket with that name does not exist"
+        error_message = "Ticket could not be bought"
     #Checks if there is an error, and if there is set the error message 
     if len(error_message) > 0:
         session['error'] = error_message
