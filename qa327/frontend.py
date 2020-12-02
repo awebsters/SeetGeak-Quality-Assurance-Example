@@ -3,7 +3,7 @@ from qa327 import app
 import re
 import qa327.backend as bn
 import re
-import datetime
+from datetime import datetime
 
 """
 This file defines the front-end part of the service.
@@ -11,7 +11,6 @@ It elaborates how the services should handle different
 http requests from the client (browser) through templating.
 The html templates are stored in the 'templates' folder.
 """
-
 
 @app.route('/register', methods=['GET'])
 def register_get():
@@ -165,6 +164,36 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+def check_ticket_form(name=None, quantity=None, price=None, date=None):
+    '''
+    Will check for valid form entries for name, quantity, price, and date of a ticket form.
+    Will not validate a parameter if its value is passed in as None
+    :return: An error message string or None if no error found
+    '''
+    if name:
+        if name[0] == ' ' or name[len(name) - 1] == ' ':
+            return "Name has space at beginning or end"
+        elif not name.isalnum():
+            return "Name can only contain alphanumeric characters"
+        elif len(name) > 60:
+            return "Name is too long, it must be shorter than 60 characters"
+    if quantity:
+        if not quantity.isnumeric():
+            return "Quantity must be a number"
+        elif int(quantity) < 0 or int(quantity) > 100:
+            return "Quantity must be greater than 0 and less than or equal to 100"
+    if price:
+        try:
+            float(price)
+        except ValueError:
+            return "Price must be a number"
+        if float(price) < 10 or float(price) > 100:
+            return "Price must be greater than or equal to 10 and less than or equal to 100"
+    if date:
+        if not datetime.strptime(date, "%Y-%m-%d"):
+            return "Date must be in the format YYYY-MM-DD"
+
+
 @app.route('/sell', methods=['POST'])
 def sell():
     """
@@ -174,13 +203,21 @@ def sell():
     """
     if 'logged_in' not in session:
         return redirect('/login')
+
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
     date = request.form.get('date')
-    ticket = bn.get_ticket(name)
-    bn.create_ticket(name, quantity, price, date, session['logged_in'])
+
+    error_message = check_ticket_form(name, quantity, price, date)
+    tickets = bn.get_all_tickets()
+    user = bn.get_user(session['logged_in'])
+    if error_message:
+        return render_template('index.html', sell_message=error_message, tickets=tickets, user=user)
+
+    bn.create_ticket(name, quantity, price, date, user.email)
     return redirect('/', code=303)
+
 
 @app.route('/buy', methods=['POST'])
 def buy():
@@ -191,13 +228,43 @@ def buy():
     """
     if 'logged_in' not in session:
         return redirect('/login')
-    return redirect('/', code=303)
+    email = session['logged_in']
+    #Get user information
+    user = bn.get_user(email)
+    #Sets the error message to blank initially
+    error_message=""
+    #Get information from the form
+    name = request.form.get('name')
+    quantity = request.form.get('quantity')
+    #Get all tickets to pass to backend function
+    tickets = bn.get_all_tickets()
+    #Checks to make sure name and quantity form values are valid, sends error if they are invalid 
+    if (len(name) > 60):
+        error_message = "Name is too long, it must be shorter than 60 characters"
+    elif(name[0] == ' ' or name[len(name) - 1] == ' '):
+        error_message = "Name has space at beginning or end"
+    elif not (name.isalnum()):
+        error_message = "Name can only contain alphanumeric characters"
+    elif not (quantity.isnumeric()):
+        error_message = "Quantity must be a number"
+    elif(int(quantity) < 0 or int(quantity) > 100):
+        error_message = "Quantity must be greater than 0 and less than or equal to 100"
+    elif (bn.buy_ticket(name,user,int(quantity))):
+        message = "Tickets bought succesfully"
+    else:
+        error_message = "Ticket could not be bought"
+    #Checks if there is an error, and if there is set the error message 
+    if len(error_message) > 0:
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+    return render_template('index.html', buy_message=message, user=user, tickets=tickets)
 
 def displayUpdateMessage(message):
     return render_template('index.html', update_message=message)
-
+  
 @app.route('/update', methods=['POST'])
-def profile_post():
+def update():
     """
     Route to update a ticket.
     This route will validate the ticket form, if valid it will update the ticket on the database
@@ -243,7 +310,7 @@ def profile_post():
 
     #Check if date is valid
     try:
-        datetime.datetime.strptime(date, "%Y-%m-%d")
+        datetime.strptime(date, "%Y-%m-%d")
     except ValueError:
         return displayUpdateMessage('Date must be given in format YYYYMMDD')
 
