@@ -71,11 +71,11 @@ def create_ticket(name, quantity, price, date, email):
 
 def update_ticket(name, quantity, price, date):
     ticket = get_ticket(name)
-    if ticket != None:
+    if ticket is not None:
         ticket.quantity = quantity
         ticket.price = price
         ticket.date = date
         db.session.update(ticket)
         db.session.commit()
-
     return None
+

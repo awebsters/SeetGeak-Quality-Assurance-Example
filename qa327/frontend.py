@@ -3,6 +3,7 @@ from qa327 import app
 import re
 import qa327.backend as bn
 import re
+import datetime
 
 """
 This file defines the front-end part of the service.
@@ -205,6 +206,55 @@ def profile_post():
     quantity = request.form.get('quantity')
     price = request.form.get('price')
     date = request.form.get('date')
+    if (len(name) > 60):
+        error_message = "Name is too long"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', update_message=message)
+    else:
+        ticket = bn.get_ticket(name)
+        if ticket is None:
+            error_message = "Ticket does not exist"
+            session['error'] = error_message
+            del session['error']
+            return render_template('index.html', update_message=session["error"])
+    if (name[0] == ' ' or name[len(name) - 1] == ' '):
+        error_message = "Name has space at beginning or end"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', update_message=message)
+    if not (name.isalnum()):
+        error_message = "Name can only contain alphanumeric characters"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', update_message=message)
+    if not (quantity.isnumeric()):
+        error_message = "Quantity must be a number"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', update_message=message)
+    if (int(quantity) < 0 or int(quantity) > 100):
+        error_message = "Quantity must be greater than 0 and less than 100"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', update_message=message)
+    if (price < 10 or price > 100):
+        error_message = "Price has to be in range between 10 to 100"
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+        return render_template('index.html', update_message=message)
+    try:
+        datetime.datetime.strptime(date, "%Y-%m-%d")
+    except ValueError:
+        error_message = "Date must be given in format YYYYMMDD"
+        session['error'] = error_message
+        del session['error']
+        return render_template('index.html', update_message=session['error'])
     bn.update_ticket(name, quantity, price, date)
     return redirect('/', code=303)
-
