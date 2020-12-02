@@ -240,11 +240,11 @@ def buy():
     tickets = bn.get_all_tickets()
 
     error_message = check_ticket_form(name, quantity)
-
-    if not error_message and bn.buy_ticket(name,user,int(quantity)):
-        message = "Tickets bought succesfully"
-    else:
-        error_message = "Ticket could not be bought"
+    if not error_message:
+        if bn.buy_ticket(name,user,int(quantity)):
+            message = "Tickets bought succesfully"
+        else:
+            error_message = "Ticket could not be bought"
     #Checks if there is an error, and if there is set the error message 
     if len(error_message) > 0:
         session['error'] = error_message
