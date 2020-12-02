@@ -75,7 +75,7 @@ Input: name
 Output: ticket object of the name
 
 Function: buy_ticket
-Input: name, quantity
+Input: name, quantity, user
 Output: Success state
 
 Function: update_ticket

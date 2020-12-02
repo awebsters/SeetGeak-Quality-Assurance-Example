@@ -11,7 +11,6 @@ http requests from the client (browser) through templating.
 The html templates are stored in the 'templates' folder.
 """
 
-
 @app.route('/register', methods=['GET'])
 def register_get():
     if 'logged_in' in session:
@@ -190,8 +189,37 @@ def buy():
     """
     if 'logged_in' not in session:
         return redirect('/login')
-    return redirect('/', code=303)
-
+    email = session['logged_in']
+    #Get user information
+    user = bn.get_user(email)
+    #Sets the error message to blank initially
+    error_message=""
+    #Get information from the form
+    name = request.form.get('name')
+    quantity = request.form.get('quantity')
+    #Get all tickets to pass to backend function
+    tickets = bn.get_all_tickets()
+    #Checks to make sure name and quantity form values are valid, sends error if they are invalid 
+    if (len(name) > 60):
+        error_message = "Name is too long, it must be shorter than 60 characters"
+    elif(name[0] == ' ' or name[len(name) - 1] == ' '):
+        error_message = "Name has space at beginning or end"
+    elif not (name.isalnum()):
+        error_message = "Name can only contain alphanumeric characters"
+    elif not (quantity.isnumeric()):
+        error_message = "Quantity must be a number"
+    elif(int(quantity) < 0 or int(quantity) > 100):
+        error_message = "Quantity must be greater than 0 and less than or equal to 100"
+    elif (bn.buy_ticket(name,user,int(quantity))):
+        message = "Tickets bought succesfully"
+    else:
+        error_message = "Ticket could not be bought"
+    #Checks if there is an error, and if there is set the error message 
+    if len(error_message) > 0:
+        session['error'] = error_message
+        message = session["error"]
+        del session["error"]
+    return render_template('index.html', buy_message=message, user=user, tickets=tickets)
 @app.route('/update', methods=['POST'])
 def profile_post():
     """
