@@ -67,16 +67,24 @@ def create_ticket(name, quantity, price, date, email):
     db.session.add(new_ticket)
     db.session.commit()
     return None
-
+#Backend functionality for ticket buying
 def buy_ticket(ticket, user, quantity):
+    #Subtracts the ticket amount plus services and tax from the buyers account
     user.balance -= quantity*ticket.price + (quantity*ticket.price*0.4)
+    #Gets the seller's user data
     seller = get_user(ticket.email)
+    #Set the seller's balance to 0 if the seller's balance is set to None to avoid a crash
     if not seller.balance:
         seller.balance = 0
+    #Add the ticket sale revenue to the sellers balance
     seller.balance += quantity*ticket.price
+    #Check if there are still tickets left after the order is complete
     if (ticket.quantity > quantity):
+        #If there are tickets left, subtract the amount bought from the total available tickets
         ticket.quantity -= quantity
     else:
+        #if not, delete the ticket from the database
         db.session.delete(ticket)
+    #commit all changes to the database
     db.session.commit()
     return None  
