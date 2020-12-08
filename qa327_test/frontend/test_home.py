@@ -155,8 +155,8 @@ class FrontEndHomePageTest(BaseCase):
         self.open(base_url)
 
         # make sure each field exists under a form with the action to buy
-        self.assert_element_present('form[action*="/buy"] #name')
-        self.assert_element_present('form[action*="/buy"] #quantity')
+        self.assert_element_present('form[action*="/buy"] #buy-name')
+        self.assert_element_present('form[action*="/buy"] #buy-quantity')
 
     @patch('qa327.backend.get_user', return_value=test_user)
     @patch('qa327.backend.get_all_tickets', return_value=test_tickets)

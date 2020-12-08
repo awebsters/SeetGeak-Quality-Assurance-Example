@@ -117,7 +117,7 @@ class FrontEndBuyTest(BaseCase):
         # open home page
         self.open(base_url)
         # enter in buy information
-        self.type("#buy-name"," t1")
+        self.type("#buy-name","t1")
         self.type("#buy-quantity","101")
         self.click('#buy-btn-submit')
         self.assert_text("Quantity must be greater than 0 and less than or equal to 100", '#buy-message')    
@@ -132,7 +132,7 @@ class FrontEndBuyTest(BaseCase):
         # open home page
         self.open(base_url)
         # enter in buy information
-        self.type("#buy-name"," t1")
+        self.type("#buy-name","t1")
         self.type("#buy-quantity","6")
         self.click('#buy-btn-submit')
         self.assert_text("Ticket could not be bought", '#buy-message') 
@@ -147,7 +147,7 @@ class FrontEndBuyTest(BaseCase):
         # open home page
         self.open(base_url)
         # enter in buy information
-        self.type("#buy-name"," t1")
+        self.type("#buy-name","t1")
         self.type("#buy-quantity","5")
         self.click('#buy-btn-submit')
         self.assert_text("Ticket could not be bought", '#buy-message') 
