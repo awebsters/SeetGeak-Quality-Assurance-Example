@@ -170,7 +170,6 @@ def check_ticket_form(name=None, quantity=None, price=None, date=None):
     Will not validate a parameter if its value is passed in as None
     :return: An error message string or None if no error found
     '''
-    print(date)
     if name:
         if name[0] == ' ' or name[len(name) - 1] == ' ':
             return "Name has space at beginning or end"
