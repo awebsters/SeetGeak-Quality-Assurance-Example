@@ -182,31 +182,6 @@ class SellPageTest(BaseCase):
 
         self.assert_text("Price must be greater than or equal to 10 and less than or equal to 100", "#message")
 
-    # @patch('qa327.backend.get_user', return_value=test_user)
-    # @patch('qa327.backend.create_ticket', return_value=None)
-    # def test_ticket_date_invalid(self, *_):
-    #     """
-    #     R4.5.1 - Check failure for date in a different format
-    #
-    #     """
-    #     # Invalidate any logged in sessions
-    #     self.open(base_url + '/logout')
-    #     # Open login page
-    #     self.open(base_url + '/login')
-    #     # Fill in form
-    #     self.type("#email", "test_frontend@test.com")
-    #     self.type("#password", "Test1234!")
-    #     # Submit
-    #     self.click('input[type="submit"]')
-    #
-    #     self.type("#name", "Test")
-    #     self.type("#quantity", 1)
-    #     self.type("#price", 20)
-    #     self.execute_script("document.querySelector('#date').setAttribute('value', '{}')".format('20-09-011'))
-    #
-    #     self.click('input[value="Sell Ticket"]')
-    #
-    #     self.assert_text("Date must be in the format YYYY-MM-DD", "#message")
 
     @patch('qa327.backend.get_user', return_value=test_user)
     @patch('qa327.backend.create_ticket', return_value=None)
@@ -231,16 +206,4 @@ class SellPageTest(BaseCase):
         self.execute_script("document.querySelector('#date').setAttribute('value', '{}')".format('2020-09-01'))
 
         self.click('input[value="Sell Ticket"]')
-
-
-
-
-
-
-
-
-
-
-
-
 
