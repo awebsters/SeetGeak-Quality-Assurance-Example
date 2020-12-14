@@ -48,7 +48,7 @@ def register_user(email, name, password, password2):
         db.session.commit()
     except:
         return False
-            
+
     return True
 
 
@@ -78,11 +78,10 @@ def update_ticket(name, quantity, price, date):
         ticket.quantity = quantity
         ticket.price = price
         ticket.date = date
-        db.session.update(ticket)
         db.session.commit()
     return 1
 
-  
+
 # Backend functionality for ticket buying
 def buy_ticket(name, user, quantity):
     # Make sure ticket exists
@@ -92,12 +91,12 @@ def buy_ticket(name, user, quantity):
         # Make sure enough quantity of tickets exist and user has enough balance
         if ticket.quantity < quantity:
             return 0
-        elif user.balance < (ticket.price*quantity + (ticket.price*quantity*0.4)):
+        elif user.balance < (ticket.price * quantity + (ticket.price * quantity * 0.4)):
             return 0
         else:
 
             # Subtracts the ticket amount plus services and tax from the buyers account
-            user.balance -= quantity*ticket.price + (quantity*ticket.price*0.4)
+            user.balance -= quantity * ticket.price + (quantity * ticket.price * 0.4)
 
             # Gets the seller's user data
             seller = get_user(ticket.email)
@@ -106,7 +105,7 @@ def buy_ticket(name, user, quantity):
             if not seller.balance:
                 seller.balance = 0
             # Add the ticket sale revenue to the sellers balance
-            seller.balance += quantity*ticket.price
+            seller.balance += quantity * ticket.price
 
             # Check if there are still tickets left after the order is complete
             if ticket.quantity > quantity:
@@ -118,5 +117,5 @@ def buy_ticket(name, user, quantity):
             # Commit all changes to the database
             db.session.commit()
     else:
-        return 0 
-    return 1  
+        return 0
+    return 1

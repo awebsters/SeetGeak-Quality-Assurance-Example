@@ -171,10 +171,10 @@ class FrontEndHomePageTest(BaseCase):
         self.open(base_url)
 
         # make sure each field exists under a form with the action to update
-        self.assert_element_present('form[action*="/update"] #name')
-        self.assert_element_present('form[action*="/update"] #quantity')
-        self.assert_element_present('form[action*="/update"] #price')
-        self.assert_element_present('form[action*="/update"] #date')
+        self.assert_element_present('form[action*="/update"] #update-name')
+        self.assert_element_present('form[action*="/update"] #update-quantity')
+        self.assert_element_present('form[action*="/update"] #update-price')
+        self.assert_element_present('form[action*="/update"] #update-date')
 
     @patch('qa327.backend.get_user', return_value=test_user)
     @patch('qa327.backend.get_all_tickets', return_value=test_tickets)
