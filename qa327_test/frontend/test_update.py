@@ -47,7 +47,7 @@ class UpdatePageTest(BaseCase):
 
         self.click('input[value="Update Ticket"]')
 
-        self.assert_text("Name can only contain alphanumeric characters", '#message')
+        self.assert_text("Name can only contain alphanumeric characters", '#update-message')
 
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_update_invalid_name_space(self, *_):
@@ -68,7 +68,7 @@ class UpdatePageTest(BaseCase):
 
         self.click('input[value="Update Ticket"]')
 
-        self.assert_text("Name cannot have space at the beginning or end", '#message')
+        self.assert_text("Name cannot have space at the beginning or end", '#update-message')
 
     @patch('qa327.backend.get_user', return_value=test_user)
     def test_update_name_length(self, *_):
