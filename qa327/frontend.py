@@ -12,6 +12,7 @@ http requests from the client (browser) through templating.
 The html templates are stored in the 'templates' folder.
 """
 
+
 @app.route('/register', methods=['GET'])
 def register_get():
     if 'logged_in' in session:
@@ -21,7 +22,6 @@ def register_get():
 
 @app.route('/register', methods=['POST'])
 def register_post():
-        
     patternEmail = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
     patternPass = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
 
@@ -38,17 +38,17 @@ def register_post():
         session['error'] = error_message
         return redirect('/login')
     elif not patternEmail.fullmatch(email):
-        error_message =  '{} format is incorrect.'.format("Email")
+        error_message = '{} format is incorrect.'.format("Email")
         session['error'] = error_message
         return redirect('/login')
 
     elif not patternPass.fullmatch(password):
-        error_message =  '{} format is incorrect.'.format("Password")
+        error_message = '{} format is incorrect.'.format("Password")
         session['error'] = error_message
         return redirect('/login')
 
     elif not patternName.fullmatch(name) or len(name) < 2 or len(name) > 20:
-        error_message =  '{} format is incorrect.'.format("Name")
+        error_message = '{} format is incorrect.'.format("Name")
         session['error'] = error_message
         return redirect('/login')
 
@@ -82,10 +82,10 @@ def login_get():
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
-    #regex for email obtained from https://emailregex.com/
+    # regex for email obtained from https://emailregex.com/
     EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
     PASSWORD_REGEX = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^A-Za-z0-9]).{6,}$")
-    if  not EMAIL_REGEX.match(email) or not PASSWORD_REGEX.match(password):
+    if not EMAIL_REGEX.match(email) or not PASSWORD_REGEX.match(password):
         return render_template('login.html', message='email/password format invalid')
     user = bn.login_user(email, password)
     if user:
@@ -159,6 +159,7 @@ def profile(user):
     tickets = bn.get_all_tickets()
     return render_template('index.html', user=user, tickets=tickets)
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -192,14 +193,15 @@ def check_ticket_form(name=None, quantity=None, price=None, date=None):
     if date:
         if not datetime.strptime(date, "%Y-%m-%d"):
             return "Date must be in the format YYYY-MM-DD"
+    return ''
 
 
 @app.route('/sell', methods=['POST'])
 def sell():
     """
-    Route to sell a new ticket. 
+    Route to sell a new ticket.
     This route will validate the ticket form, if valid it will use a backend function
-    to commit to the database  
+    to commit to the database
     """
     if 'logged_in' not in session:
         return redirect('/login')
@@ -229,32 +231,30 @@ def buy():
     if 'logged_in' not in session:
         return redirect('/login')
     email = session['logged_in']
-    #Get user information
+    # Get user information
     user = bn.get_user(email)
-    #Sets the error message to blank initially
-    error_message=""
-    #Get information from the form
+    # Sets the error message to blank initially
+    error_message = ""
+    # Get information from the form
     name = request.form.get('name')
     quantity = request.form.get('quantity')
-    #Get all tickets to pass to backend function
+    # Get all tickets to pass to backend function
     tickets = bn.get_all_tickets()
 
     error_message = check_ticket_form(name, quantity)
     if not error_message:
-        if bn.buy_ticket(name,user,int(quantity)):
+        if bn.buy_ticket(name, user, int(quantity)):
             message = "Tickets bought succesfully"
         else:
             error_message = "Ticket could not be bought"
-    #Checks if there is an error, and if there is set the error message 
+    # Checks if there is an error, and if there is set the error message
     if len(error_message) > 0:
         session['error'] = error_message
         message = session["error"]
         del session["error"]
     return render_template('index.html', buy_message=message, user=user, tickets=tickets)
 
-def displayUpdateMessage(message):
-    return render_template('index.html', update_message=message)
-  
+
 @app.route('/update', methods=['POST'])
 def update():
     """
@@ -265,7 +265,10 @@ def update():
     if 'logged_in' not in session:
         return redirect('/login')
 
-    #Grab necessary information from update form
+    # Grab necessary information from update form
+    user = bn.get_user(session['logged_in'])
+    tickets = bn.get_all_tickets()
+
     name = request.form.get('name')
     quantity = request.form.get('quantity')
     price = request.form.get('price')
@@ -273,15 +276,15 @@ def update():
 
     error_message = check_ticket_form(name, quantity, price, date)
     if error_message:
-        return displayUpdateMessage(error_message)
+        return render_template('index.html', update_message=error_message, user=user, tickets=tickets)
 
-    #Check if ticket exists in database
+    # Check if ticket exists in database
     ticket = bn.get_ticket(name)
-    if (ticket is None):
-        return displayUpdateMessage('Ticket does not exist')
+    if ticket is None:
+        return render_template('index.html', update_message='Ticket does not exist', user=user, tickets=tickets)
 
-    #Update tickets to database
+    # Update tickets to database
     bn.update_ticket(name, quantity, price, date)
-    return displayUpdateMessage('Successfully updated tickets')
+    return render_template('index.html', update_message='Successfully updated tickets', user=user, tickets=tickets)
 
 
