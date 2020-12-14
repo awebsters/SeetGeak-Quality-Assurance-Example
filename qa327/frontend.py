@@ -192,6 +192,7 @@ def check_ticket_form(name=None, quantity=None, price=None, date=None):
     if date:
         if not datetime.strptime(date, "%Y-%m-%d"):
             return "Date must be in the format YYYY-MM-DD"
+    return ''
 
 
 @app.route('/sell', methods=['POST'])
