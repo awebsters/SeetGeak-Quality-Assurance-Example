@@ -71,7 +71,7 @@ def create_ticket(name, quantity, price, date, email):
 def update_ticket(name, quantity, price, date):
     ticket = get_ticket(name)
 
-    #Check that ticket exists
+    # Check that ticket exists
     if ticket is None:
         return 0
     else:
@@ -83,34 +83,39 @@ def update_ticket(name, quantity, price, date):
     return 1
 
   
-#Backend functionality for ticket buying
+# Backend functionality for ticket buying
 def buy_ticket(name, user, quantity):
-    #Make sure ticket exists
-    if (get_ticket(name)):
+    # Make sure ticket exists
+    if get_ticket(name):
         ticket = get_ticket(name)
-        #Make sure enough quantity of tickets exist and user has enough balance
+
+        # Make sure enough quantity of tickets exist and user has enough balance
         if ticket.quantity < quantity:
             return 0
-        elif (user.balance < (ticket.price*quantity + (ticket.price*quantity*0.4))):
+        elif user.balance < (ticket.price*quantity + (ticket.price*quantity*0.4)):
             return 0
         else:
-            #Subtracts the ticket amount plus services and tax from the buyers account
+
+            # Subtracts the ticket amount plus services and tax from the buyers account
             user.balance -= quantity*ticket.price + (quantity*ticket.price*0.4)
-            #Gets the seller's user data
+
+            # Gets the seller's user data
             seller = get_user(ticket.email)
-            #Set the seller's balance to 0 if the seller's balance is set to None to avoid a crash
+
+            # Set the seller's balance to 0 if the seller's balance is set to None to avoid a crash
             if not seller.balance:
                 seller.balance = 0
-            #Add the ticket sale revenue to the sellers balance
+            # Add the ticket sale revenue to the sellers balance
             seller.balance += quantity*ticket.price
-            #Check if there are still tickets left after the order is complete
-            if (ticket.quantity > quantity):
-                #If there are tickets left, subtract the amount bought from the total available tickets
+
+            # Check if there are still tickets left after the order is complete
+            if ticket.quantity > quantity:
+                # If there are tickets left, subtract the amount bought from the total available tickets
                 ticket.quantity -= quantity
             else:
-                #if not, delete the ticket from the database
+                # if not, delete the ticket from the database
                 db.session.delete(ticket)
-            #commit all changes to the database
+            # Commit all changes to the database
             db.session.commit()
     else:
         return 0 

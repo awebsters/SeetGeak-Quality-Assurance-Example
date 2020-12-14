@@ -180,7 +180,7 @@ def check_ticket_form(name=None, quantity=None, price=None, date=None):
     if quantity:
         if not quantity.isnumeric():
             return "Quantity must be a number"
-        elif int(quantity) <= 0 or int(quantity) > 100:
+        elif int(quantity) < 1 or int(quantity) > 100:
             return "Quantity must be greater than 0 and less than or equal to 100"
     if price:
         try:
