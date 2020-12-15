@@ -74,6 +74,7 @@ requests==2.25.0
 rich==9.2.0
 selenium==3.141.0
 seleniumbase==1.50.7
+pymysql
 setuptools-scm==4.1.2
 six==1.15.0
 sortedcontainers==2.3.0
